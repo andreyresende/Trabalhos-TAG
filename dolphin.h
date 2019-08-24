@@ -8,10 +8,12 @@
 class Dolphin {
     private:
         int id;
-        std::list <Dolphin> conexoes;
     public:
+        std::list <Dolphin> conexoes;
+        int totalConexoes;
         Dolphin() {
             id = 0;
+            totalConexoes = 0;
         }
         void setId(int id) {
             this->id = id;
