@@ -30,6 +30,7 @@ class Graph {
     private: 
     public: 
         std::list <Dolphin> listaTotal;
+        int map[62][62];
         void setGraph(Dolphin dolphin){
             listaTotal.push_back(dolphin);
         }

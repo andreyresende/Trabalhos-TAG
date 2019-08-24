@@ -14,6 +14,13 @@ void leArquivo() {
     bool naoEncontrado = false;
 
     Graph Grafo;
+
+    for (int i = 0; i < 62; i++){
+        for (int j = 0; j < 62; j++){
+            Grafo.map[i][j] = 0;
+        }
+        cout << endl;
+    } 
     //list <Dolphin> listaTotal;
 
     char file[] = "dolphins.txt";
@@ -34,6 +41,7 @@ void leArquivo() {
             //listaTotal.push_back(dolphin);
             dolphin.setConnection(refDolphin);
             Grafo.listaTotal.push_back(dolphin);
+            Grafo.map[id][refId] = 1;
             //cout << "ELEMENTO ZERO: " << endl;
             //cout << dolphin.getId() << " " << refDolphin.getId() << endl;
         }
@@ -42,6 +50,7 @@ void leArquivo() {
                 //cout << i.getId() << endl;
                 if (id == i.getId()){
                     i.setConnection(refDolphin);
+                    Grafo.map[id][refId] = 1;
                     //cout << "ELEMENTO JA EXISTE: " << endl;
                     //cout << i.getId() << " " << refDolphin.getId() << endl;
                     naoEncontrado = true;
@@ -53,6 +62,7 @@ void leArquivo() {
                 //listaTotal.push_back(dolphin);
                 dolphin.setConnection(refDolphin);
                 Grafo.listaTotal.push_back(dolphin);
+                Grafo.map[id][refId] = 1;
             }
                 //cout << dolphin.getId() << " " << refDolphin.getId() << endl;
 
@@ -71,6 +81,17 @@ void leArquivo() {
     }
     cout << "TOTAL DE ELEMENTOS: " << Grafo.listaTotal.size() << endl;
     cout << "TOTAL DE CONEXOES: "<< total << endl;
+
+
+     for (int i = 0; i < 62; i++){
+        for (int j = 0; j < 62; j++){
+            cout << Grafo.map[i][j] << " ";
+            if (Grafo.map[i][j] != 0 || Grafo.map[i][j] != 1){
+                Grafo.map[i][j] = 0;
+            }
+        }
+        cout << endl;
+    } 
 
 }
 
