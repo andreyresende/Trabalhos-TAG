@@ -4,6 +4,7 @@
 #include <list> 
 #include <iterator>
 
+
 class Dolphin {
     private:
         int id;
@@ -18,9 +19,17 @@ class Dolphin {
         int getId() {
             return this->id;
         }
-         void setConnection(Dolphin idRef) {
+        void setConnection(Dolphin idRef) {
             this->conexoes.push_back(idRef);
         } 
 };
 
+class Graph {
+    private: 
+    public: 
+        std::list <Dolphin> listaTotal;
+        void setGraph(Dolphin dolphin){
+            listaTotal.push_back(dolphin);
+        }
+};
 #endif
