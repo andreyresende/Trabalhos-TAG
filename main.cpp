@@ -82,10 +82,15 @@ void leArquivo() {
     cout << "TOTAL DE ELEMENTOS: " << Grafo.listaTotal.size() << endl;
     cout << "TOTAL DE CONEXOES: "<< total << endl;
 
+    for (int i = 0; i < 62; i++){
+        cout << i+1 << "\t";
 
-     for (int i = 0; i < 62; i++){
         for (int j = 0; j < 62; j++){
-            cout << Grafo.map[i][j] << " ";
+            if (Grafo.map[i][j] == 1)
+                cout << Grafo.map[i][j] << " ";
+            else if(Grafo.map[i][j] == 0)
+                cout << " " << " ";
+
             if (Grafo.map[i][j] != 0 || Grafo.map[i][j] != 1){
                 Grafo.map[i][j] = 0;
             }
