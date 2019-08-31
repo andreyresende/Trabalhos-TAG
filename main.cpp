@@ -1,172 +1,78 @@
 #include <iostream>
 #include <list>
+#include <algorithm>
+#include <fstream>
 #include <iterator>
-#include "dolphin.h"
+#include <string>
+#include <cstdlib>
 
 using namespace std;
 
-void leArquivo()
-{
-    FILE *dolphins;
-    int refId, id;
-    int minId = 999, maxId = 0;
-    int minRefId = 999, maxRefId = 0;
+class Grafo {
+    private: 
+        int quantidade_vertices;
+        list<int> *vizinhos;//Aponta para o vetor de listas
+    public: 
+    Grafo(int quantidade_vertices);
+    void adicionar_relacao(int golfinho1, int golfinho2);
+    void mostrar_graus();
+    void mostrar_maximais();
+    void mostrar_coeficiente();
+    void coeficiente_medio();
+};
 
-    bool naoEncontrado = false;
+Grafo::Grafo(int quantidade_vertices){//Construtor que inicializa o grafo com a quantidade de vertices e cria o array de listas para os golfinhos
+    this->quantidade_vertices = quantidade_vertices;
+    vizinhos                  = new list<int>[quantidade_vertices+1];
+}
 
-    Graph Grafo;
+void Grafo::adicionar_relacao(int golfinho1, int golfinho2){
+    vizinhos[golfinho1].push_back(golfinho2);
+    vizinhos[golfinho2].push_back(golfinho1);
+}
 
-    for (int i = 0; i < 62; i++)
-    {
-        for (int j = 0; j < 62; j++)
-        {
-            Grafo.map[i][j] = 0;
+void Grafo::mostrar_graus(){
+    int i=1;
+    while(i <= 62){
+        cout <<"O golfinho nº " << i << " possui " << vizinhos[i].size() << " amigo(s)" << endl;
+        i++;
+    }
+    cout << "Teste " << vizinhos[1].() << endl;
+}
+
+void Grafo::mostrar_maximais(){//Implementado utilizando o algoritmo de Bron-Kerbosch
+    list<int> R, P, X;
+    int iterator;
+    for(int i=1; i<=62; i++){
+        P.push_back(i);
+    }
+    if(P.empty() && X.empty(){
+        cout << "Clique de tamanho " << R.size() << "  - Vertices: ";
+        iterator = R.begin();
+        while(iterator != NULL){
+            cout << iterator << " ";
+            iterator++;
         }
         cout << endl;
     }
-    //list <Dolphin> listaTotal;
+}
 
-    char file[] = "dolphins.txt";
-    dolphins = fopen(file, "r");
-
-    if (dolphins == NULL)
-    {
-        cout << "Erro ao abrir Arquivo" << endl;
-    }
-    while (fscanf(dolphins, "%d %d", &id, &refId) != EOF)
-    {
-        //Seta o Id de cada elemento do Grafo
-        Dolphin dolphin, refDolphin;
-
-        naoEncontrado = false;
-        dolphin.setId(id);
-        refDolphin.setId(refId);
-
-        if (Grafo.listaTotal.size() == 0)
-        {
-            //listaTotal.push_back(dolphin);
-            dolphin.setConnection(refDolphin);
-            Grafo.listaTotal.push_back(dolphin);
-            Grafo.map[id][refId] = 1;
-            //cout << "ELEMENTO ZERO: " << endl;
-            //cout << dolphin.getId() << " " << refDolphin.getId() << endl;
+void ler_arquivo(Grafo &grafo){
+    FILE *arquivo;
+    arquivo = fopen("dolphins.txt","r");
+    if(arquivo != NULL){
+        int golfinho1, golfinho2;
+        while(fscanf(arquivo,"%d" "%d", &golfinho1, &golfinho2) != EOF){
+            grafo.adicionar_relacao(golfinho1, golfinho2);
         }
-        else
-        {
-            for (auto &i : Grafo.listaTotal)
-            {
-                //cout << i.getId() << endl;
-                if (id == i.getId())
-                {
-                    i.setConnection(refDolphin);
-                    Grafo.map[id][refId] = 1;
-                    //cout << "ELEMENTO JA EXISTE: " << endl;
-                    //cout << i.getId() << " " << refDolphin.getId() << endl;
-                    naoEncontrado = true;
-                }
-            }
-            if (!naoEncontrado)
-            {
-                //cout << "ELEMENTO NAO EXISTE: " << endl;
-                //listaTotal.push_back(dolphin);
-                dolphin.setConnection(refDolphin);
-                Grafo.listaTotal.push_back(dolphin);
-                Grafo.map[id][refId] = 1;
-            }
-            //cout << dolphin.getId() << " " << refDolphin.getId() << endl;
-        }
+        fclose(arquivo);    
     }
-
-    fclose(dolphins);
-
-    //Le lado esquerdo agr
-    dolphins = fopen(file, "r");
-
-    if (dolphins == NULL)
-    {
-        cout << "Erro ao abrir Arquivo" << endl;
-    }
-    while (fscanf(dolphins, "%d %d", &refId, &id) != EOF)
-    {
-        //Seta o Id de cada elemento do Grafo
-        Dolphin dolphin, refDolphin;
-
-        naoEncontrado = false;
-        dolphin.setId(id);
-        refDolphin.setId(refId);
-
-        if (Grafo.listaTotal.size() == 0)
-        {
-            //listaTotal.push_back(dolphin);
-            dolphin.setConnection(refDolphin);
-            Grafo.listaTotal.push_back(dolphin);
-            Grafo.map[id][refId] = 1;
-            //cout << "ELEMENTO ZERO: " << endl;
-            //cout << dolphin.getId() << " " << refDolphin.getId() << endl;
-        }
-        else
-        {
-            for (auto &i : Grafo.listaTotal)
-            {
-                //cout << i.getId() << endl;
-                if (id == i.getId())
-                {
-                    i.setConnection(refDolphin);
-                    Grafo.map[id][refId] = 1;
-                    //cout << "ELEMENTO JA EXISTE: " << endl;
-                    //cout << i.getId() << " " << refDolphin.getId() << endl;
-                    naoEncontrado = true;
-                }
-            }
-            if (!naoEncontrado)
-            {
-                //cout << "ELEMENTO NAO EXISTE: " << endl;
-                //listaTotal.push_back(dolphin);
-                dolphin.setConnection(refDolphin);
-                Grafo.listaTotal.push_back(dolphin);
-                Grafo.map[id][refId] = 1;
-            }
-            //cout << dolphin.getId() << " " << refDolphin.getId() << endl;
-        }
-    }
-
-    fclose(dolphins);
-
-    int total = 0;
-    for (auto &i : Grafo.listaTotal)
-    {
-        cout << "Base: " << i.getId() << " " << endl;
-        cout << "Tamanho de conexoes: " << i.conexoes.size() << endl;
-        for (auto &j : i.conexoes)
-            cout << j.getId() << " ";
-        cout << endl
-             << endl;
-        total += i.conexoes.size();
-    }
-    cout << "TOTAL DE ELEMENTOS: " << Grafo.listaTotal.size() << endl;
-    cout << "TOTAL DE CONEXOES: " << total << endl;
-
-    /* for (int i = 0; i < 62; i++){
-        cout << i+1 << "\t";
-
-        for (int j = 0; j < 62; j++){
-            if (Grafo.map[i][j] == 1)
-                cout << Grafo.map[i][j] << " ";
-            else if(Grafo.map[i][j] == 0)
-                cout << " " << " ";
-
-            if (Grafo.map[i][j] != 0 || Grafo.map[i][j] != 1){
-                Grafo.map[i][j] = 0;
-            }
-        }
-        cout << endl;
-    }  */
 }
 
 int main()
 {
-    leArquivo();
-    //verificaMinMax();
-    //cout << "Hello, World!" << endl;
+    Grafo grafo(62);
+    ler_arquivo(grafo);
+    grafo.mostrar_graus();
     return 0;
 }
