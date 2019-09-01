@@ -16,7 +16,7 @@ class Grafo {
     Grafo(int quantidade_vertices);
     void adicionar_relacao(int golfinho1, int golfinho2);
     void mostrar_graus();
-    void mostrar_maximais();
+    void mostrar_maximais(list<int> R, list<int> P, list<int> X);
     void mostrar_coeficiente();
     void coeficiente_medio();
 };
@@ -40,20 +40,28 @@ void Grafo::mostrar_graus(){
     }
 }
 
-void Grafo::mostrar_maximais(){//Implementado utilizando o algoritmo de Bron-Kerbosch
-    list<int> R, P, X;
-    for(int i=1; i<=62; i++){
-        P.push_back(i);
+void Grafo::mostrar_maximais(list<int> R, list<int> P, list<int> X){//Implementado utilizando o algoritmo de Bron-Kerbosch
+    _List_const_iterator <int> ponteiro;
+    if(P.size() == 0){
+        if(X.size() == 0){
+            cout << "Clique de tamanho " << R.size() << endl;
+            ponteiro = R.begin();
+            cout << "Vertices: ";
+            for(int i = 0; i < R.size(); i++){
+                cout << *ponteiro << ", ";
+            }
+            cout << endl;
+        }
+        return;
     }
-    if(P.size() == 0 && X.size() == 0){
-        cout << "Clique de tamanho " << R.size() << "  - Vertices: ";
-        cout << endl;
+    for(int i = 0; i < P.size(); i++){
+        mostrar_maximais(R, P, X);
     }
 }
 
 void Grafo::mostrar_coeficiente(){
     int i = 1, qtd_amigos, busca, aux;
-    float coeficiente_grafo, soma_real = 0, coeficiente_maximo, coeficiente_real = 0;
+    float coeficiente_grafo, soma_coeficientes = 0, coeficiente_maximo, coeficiente_real = 0;
     _List_const_iterator <int> ponteiro, auxiliar;
     while(i<=62){
         ponteiro           = vizinhos[i].begin();
@@ -77,11 +85,11 @@ void Grafo::mostrar_coeficiente(){
         }
         cout << "Coeficiente de aglomeracao do golfinho " << i << " = " << coeficiente_real << "/" << coeficiente_maximo << endl;
         if(coeficiente_maximo != 0)
-            soma_real       += coeficiente_real/coeficiente_maximo;
+            soma_coeficientes       += coeficiente_real/coeficiente_maximo;
         coeficiente_real = 0;
         i++; 
     }
-    coeficiente_grafo = soma_real/62;
+    coeficiente_grafo = soma_coeficientes/62;
     cout << "Coeficiente medio do grafo = " << coeficiente_grafo << endl; 
 }
 
@@ -98,6 +106,10 @@ void ler_arquivo(Grafo &grafo){
 }
 
 int main(){
+    list<int> R, P, X;
+    for(int i = 1; i <= 62; i++){
+        P.push_back(i);
+    }
     Grafo grafo(62);
     ler_arquivo(grafo);
     grafo.mostrar_graus();
