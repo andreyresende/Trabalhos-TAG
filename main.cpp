@@ -8,6 +8,18 @@
 
 using namespace std;
 
+list<int> achar_interseccao(list<int> lista1, list<int> lista2){
+    list<int> resultado;
+    _List_const_iterator <int> iterador;
+    iterador = lista1.begin();
+    while(iterador != lista1.end()){
+        if(find(lista2.begin(), lista2.end(), *iterador) != lista2.end()){
+            resultado.push_back(*iterador);
+        }
+        iterador++;
+    }
+    return resultado;
+}
 class Grafo {
     private: 
         int quantidade_vertices;
@@ -16,9 +28,9 @@ class Grafo {
     Grafo(int quantidade_vertices);
     void adicionar_relacao(int golfinho1, int golfinho2);
     void mostrar_graus();
-    void mostrar_maximais(list<int> R, list<int> P, list<int> X);
     void mostrar_coeficiente();
     void coeficiente_medio();
+    void Kerbosch(list<int> R, list<int> P, list<int> X);
 };
 
 Grafo::Grafo(int quantidade_vertices){//Construtor que inicializa o grafo com a quantidade de vertices e cria o array de listas para os golfinhos
@@ -33,15 +45,16 @@ void Grafo::adicionar_relacao(int golfinho1, int golfinho2){
 
 void Grafo::mostrar_graus(){
     int i=1;
-    int *ptr;
     while(i <= 62){
         cout <<"O golfinho nº " << i << " possui " << vizinhos[i].size() << " amigo(s)" << endl;
         i++;
     }
 }
 
-void Grafo::mostrar_maximais(list<int> R, list<int> P, list<int> X){//Implementado utilizando o algoritmo de Bron-Kerbosch
-    _List_const_iterator <int> ponteiro;
+void Grafo::Kerbosch(list<int> R, list<int> P, list<int> X){
+    //Implementado de acordo com o pseudo-codigo apresentado em aula
+    list<int> Raux, Paux, Xaux;
+    list<int>::iterator ponteiro;
     if(P.size() == 0){
         if(X.size() == 0){
             cout << "Clique de tamanho " << R.size() << endl;
@@ -49,13 +62,22 @@ void Grafo::mostrar_maximais(list<int> R, list<int> P, list<int> X){//Implementa
             cout << "Vertices: ";
             for(int i = 0; i < R.size(); i++){
                 cout << *ponteiro << ", ";
+                ponteiro++;
             }
             cout << endl;
         }
         return;
     }
-    for(int i = 0; i < P.size(); i++){
-        mostrar_maximais(R, P, X);
+    ponteiro = P.begin();
+    while(ponteiro != P.end()){
+        Raux = R;
+        Raux.push_back(*ponteiro);
+        Paux = achar_interseccao(P, vizinhos[*ponteiro]);
+        Xaux = achar_interseccao(X, vizinhos[*ponteiro]);
+        Kerbosch(Raux, Paux, Xaux);
+        P.remove(R.back());
+        X.push_back(R.back());
+        ponteiro++;
     }
 }
 
@@ -72,12 +94,8 @@ void Grafo::mostrar_coeficiente(){
         for(int j = 0; j < qtd_amigos; j++){
             for(int k = 0; k < aux-1; k++){
                 auxiliar++;
-                //cout << "Ponteiro = " << *ponteiro << endl;
-                //cout << "Testando se tem " << *auxiliar << " no ponteiro" << endl;
-                if(find(vizinhos[*ponteiro].begin(), vizinhos[*ponteiro].end(),*auxiliar) != vizinhos[*ponteiro].end()){
+                if(find(vizinhos[*ponteiro].begin(), vizinhos[*ponteiro].end(),*auxiliar) != vizinhos[*ponteiro].end())
                     coeficiente_real++;
-                    //cout << "Coeficiente real aumentado, agora está em " << coeficiente_real << endl;
-                }
             }
             aux--;
             ponteiro++;
@@ -105,6 +123,7 @@ void ler_arquivo(Grafo &grafo){
     }
 }
 
+
 int main(){
     list<int> R, P, X;
     for(int i = 1; i <= 62; i++){
@@ -114,5 +133,6 @@ int main(){
     ler_arquivo(grafo);
     grafo.mostrar_graus();
     grafo.mostrar_coeficiente();
+    grafo.Kerbosch(R,P,X);
     return 0;
 }
